@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { Button } from "./ui/button";
 
-import { cn } from "@/lib/utils";
+import { cn, getRandomInterviewCover } from "@/lib/utils";
 import DisplayTechIcons from "./DisplayTechIcons";
 
 const InterviewCard = async ({
@@ -98,8 +98,8 @@ const InterviewCard = async ({
 
           {/* Cover Image */}
           <Image
-            src="/interview-cover.png"
-            // src={getRandomInterviewCover()}
+            // src="/interview-cover.png"
+            src={getRandomInterviewCover()}
             alt="cover-image"
             width={90}
             height={90}
@@ -135,9 +135,7 @@ const InterviewCard = async ({
         </div>
 
         <div className="flex flex-row justify-between">
-          <DisplayTechIcons
-            techStack={["React", "TypeScript", "Next.js", "Tailwind CSS"]}
-          />
+          <DisplayTechIcons techStack={techstack} />
 
           <Button className="btn-primary">
             <Link

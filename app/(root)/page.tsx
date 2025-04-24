@@ -1,17 +1,24 @@
 import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/actions/auth.actions";
+import {
+  getInterviewsByUserId,
+  getLatestInterviews,
+} from "@/lib/actions/interview.actions";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-const dummyInterviewData = {
-  id: "12345", // unique identifier for the interview
-  userId: "67890", // user ID (it can be a number or string depending on your data type)
-  role: "Software Engineer",
-  type: "Technical",
-  techstack: ["React", "Node.js", "MongoDB"], // a string of technologies used in the role
-  createdAt: new Date().toISOString(), // creation date in ISO string format
-};
-const page = () => {
+
+const page = async () => {
+  const user = await getCurrentUser();
+
+  const [userInterviews, allInterview] = await Promise.all([
+    getInterviewsByUserId(user?.id!),
+    getLatestInterviews({ userId: user?.id! }),
+  ]);
+  const hasPastInterviews = userInterviews?.length! > 0;
+  const hasUpcomingInterviews = allInterview?.length! > 0;
+
   return (
     <>
       <section className="card-cta">
@@ -39,20 +46,44 @@ const page = () => {
         <h2>Your Interviews</h2>
 
         <div className="interviews-section">
-          <InterviewCard
-            key={dummyInterviewData.id}
-            userId={dummyInterviewData.userId}
-            interviewId={dummyInterviewData.id}
-            role={dummyInterviewData.role}
-            type={dummyInterviewData.type}
-            techstack={dummyInterviewData.techstack}
-            createdAt={dummyInterviewData.createdAt}
-          />
+          {hasPastInterviews ? (
+            userInterviews?.map((interview) => (
+              <InterviewCard
+                key={interview.id}
+                userId={user?.id}
+                interviewId={interview.id}
+                role={interview.role}
+                type={interview.type}
+                techstack={interview.techstack}
+                createdAt={interview.createdAt}
+              />
+            ))
+          ) : (
+            <p>You haven&apos;t taken any interviews yet</p>
+          )}
         </div>
       </section>
 
       <section className="flex flex-col gap-6 mt-8">
         <h2>Take Interviews</h2>
+
+        <div className="interviews-section">
+          {hasUpcomingInterviews ? (
+            allInterview?.map((interview) => (
+              <InterviewCard
+                key={interview.id}
+                userId={user?.id}
+                interviewId={interview.id}
+                role={interview.role}
+                type={interview.type}
+                techstack={interview.techstack}
+                createdAt={interview.createdAt}
+              />
+            ))
+          ) : (
+            <p>There are no interviews available</p>
+          )}
+        </div>
       </section>
     </>
   );
