@@ -12,7 +12,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 import FormField from "./FormField";
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -29,6 +29,7 @@ const authFormSchema = (type: FormType) => {
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
+  const [loadingBtn, setLoadingBtn] = useState(false);
   const router = useRouter();
 
   const formSchema = authFormSchema(type);
@@ -95,6 +96,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
     } catch (error) {
       console.log(error);
       toast.error(`There was an error: ${error}`);
+    } finally {
+      setLoadingBtn(false);
     }
   };
 
@@ -112,7 +115,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={() => {
+              setLoadingBtn(true);
+              form.handleSubmit(onSubmit);
+            }}
             className="w-full space-y-6 mt-4 form"
           >
             {!isSignIn && (
@@ -141,8 +147,12 @@ const AuthForm = ({ type }: { type: FormType }) => {
               type="password"
             />
 
-            <Button className="btn" type="submit">
-              {isSignIn ? "Sign In" : "Create an Account"}
+            <Button className="btn" type="submit" disabled={loadingBtn}>
+              {loadingBtn
+                ? "Loading"
+                : isSignIn
+                ? "Sign In"
+                : "Create an Account"}
             </Button>
           </form>
         </Form>

@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 
 import { cn, getRandomInterviewCover } from "@/lib/utils";
 import DisplayTechIcons from "./DisplayTechIcons";
+import { getFeedbackByInterviewId } from "@/lib/actions/interview.actions";
 
 const InterviewCard = async ({
   interviewId,
@@ -15,59 +16,13 @@ const InterviewCard = async ({
   techstack,
   createdAt,
 }: InterviewCardProps) => {
-  const feedback = {
-    totalScore: 85,
-    categoryScores: [
-      {
-        name: "Communication Skills",
-        score: 8,
-        comment: "Excellent communication and clarity in expressing ideas.",
-      },
-      {
-        name: "Technical Knowledge",
-        score: 7,
-        comment:
-          "Good understanding of the technical aspects, but can improve in advanced topics.",
-      },
-      {
-        name: "Problem Solving",
-        score: 9,
-        comment:
-          "Strong analytical skills and ability to solve complex problems efficiently.",
-      },
-      {
-        name: "Cultural Fit",
-        score: 8,
-        comment:
-          "Adapts well to the team environment and aligns with company values.",
-      },
-      {
-        name: "Confidence and Clarity",
-        score: 8,
-        comment:
-          "Confident in delivering presentations, though could work on simplifying complex ideas.",
-      },
-    ],
-    strengths: [
-      "Strong communication skills",
-      "Excellent problem-solving ability",
-      "Good team player",
-    ],
-    areasForImprovement: [
-      "Improve deep technical knowledge in certain areas",
-      "Simplify explanations in presentations",
-    ],
-    finalAssessment:
-      "Overall, a great candidate with minor areas for improvement.",
-    createdAt: new Date().toISOString(), // Added createdAt field (ISO string format)
-  };
-
-  // userId && interviewId
-  //   ? await getFeedbackByInterviewId({
-  //       interviewId,
-  //       userId,
-  //     })
-  //   : null;
+  const feedback =
+    userId && interviewId
+      ? await getFeedbackByInterviewId({
+          interviewId,
+          userId,
+        })
+      : null;
 
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
 
@@ -97,14 +52,14 @@ const InterviewCard = async ({
           </div>
 
           {/* Cover Image */}
-          <Image
+          {/* <Image
             // src="/interview-cover.png"
-            src={getRandomInterviewCover()}
+            src={getRandomInterviewCover()} 
             alt="cover-image"
             width={90}
             height={90}
             className="rounded-full object-fit size-[90px]"
-          />
+          /> */}
 
           {/* Interview Role */}
           <h3 className="mt-5 capitalize">{role} Interview</h3>
@@ -140,10 +95,9 @@ const InterviewCard = async ({
           <Button className="btn-primary">
             <Link
               href={
-                // feedback
-                //   ? `/interview/${interviewId}/feedback`
-                //   : `/interview/${interviewId}`
-                `/interview/${interviewId}`
+                feedback
+                  ? `/interview/${interviewId}/feedback`
+                  : `/interview/${interviewId}`
               }
             >
               {feedback ? "Check Feedback" : "View Interview"}
