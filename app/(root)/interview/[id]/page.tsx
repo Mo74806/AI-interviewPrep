@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 import Agent from "@/components/Agent";
 import { getRandomInterviewCover } from "@/lib/utils";
 
-import { getInterviewById } from "@/lib/actions/interview.actions";
+import {
+  getFeedbackByInterviewId,
+  getInterviewById,
+} from "@/lib/actions/interview.actions";
 import DisplayTechIcons from "@/components/DisplayTechIcons";
 import { getCurrentUser } from "@/lib/actions/auth.actions";
 
@@ -16,6 +19,10 @@ const InterviewDetails = async ({ params }: RouteParams) => {
   const interview = await getInterviewById(id);
   if (!interview) redirect("/");
 
+  const feedback = await getFeedbackByInterviewId({
+    interviewId: id,
+    userId: user?.id!,
+  });
   return (
     <>
       <div className="flex flex-row gap-4 justify-between">
@@ -45,6 +52,7 @@ const InterviewDetails = async ({ params }: RouteParams) => {
         interviewId={id}
         type="interview"
         questions={interview.questions}
+        feedbackId={feedback?.id}
       />
     </>
   );

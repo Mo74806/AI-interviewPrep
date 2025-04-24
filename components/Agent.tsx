@@ -3,9 +3,15 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
 import { interviewer } from "@/constants";
+import { createFeedback } from "@/lib/actions/interview.actions";
+import LoadingAI from "./LoadingAI";
+type AvatarImageProps = {
+  name: string;
+  size?: number; // in pixels
+};
 enum CallStatus {
   CONNECTING = "CONNECTING",
   INACTIVE = "INACTIVE",
@@ -25,11 +31,36 @@ const Agent = ({
   type,
   questions,
 }: AgentProps) => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [lastMessage, setLastMessage] = useState<string>("");
+  const size = 64;
+
+  const initial = getInitials(userName);
+  const bgColor = "#3b82f6"; // or generate from name hash
+
+  const svg = `
+      <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${size}" height="${size}" fill="${bgColor}" rx="${
+    size / 2
+  }" />
+        <text x="50%" y="50%" dy=".1em"
+          font-family="Arial, sans-serif"
+          font-size="${size / 2}"
+          fill="white"
+          text-anchor="middle"
+          dominant-baseline="middle"
+        >
+          ${initial}
+        </text>
+      </svg>
+    `;
+
+  const base64 = Buffer.from(svg).toString("base64");
+  const imageSrc = `data:image/svg+xml;base64,${base64}`;
 
   useEffect(() => {
     const onCallStart = () => {
@@ -83,15 +114,12 @@ const Agent = ({
     }
 
     const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-      console.log("handleGenerateFeedback");
-
-      // const { success, feedbackId: id } = await createFeedback({
-      //   interviewId: interviewId!,
-      //   userId: userId!,
-      //   transcript: messages,
-      //   feedbackId,
-      // });
-      const { success, id } = { success: true, id: "123" }; // Mocked response for demonstration
+      const { success, feedbackId: id } = await createFeedback({
+        interviewId: interviewId!,
+        userId: userId!,
+        transcript: messages,
+        feedbackId,
+      });
 
       if (success && id) {
         router.push(`/interview/${interviewId}/feedback`);
@@ -99,12 +127,14 @@ const Agent = ({
         console.log("Error saving feedback");
         router.push("/");
       }
+      setLoading(false);
     };
 
     if (callStatus === CallStatus.FINISHED) {
       if (type === "generate") {
         router.push("/");
       } else {
+        setLoading(true);
         handleGenerateFeedback(messages);
       }
     }
@@ -142,6 +172,7 @@ const Agent = ({
 
   return (
     <>
+      {loading && <LoadingAI />}
       <div className="call-view">
         <div className="card-interviewer">
           <div className="avatar">
@@ -159,7 +190,7 @@ const Agent = ({
         <div className="card-border">
           <div className="card-content">
             <Image
-              src="/user-avatar.png"
+              src={imageSrc}
               alt="user avatar"
               width={540}
               height={540}
