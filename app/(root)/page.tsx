@@ -1,24 +1,13 @@
-import InterviewCard from "@/components/InterviewCard";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/lib/actions/auth.actions";
-import {
-  getInterviewsByUserId,
-  getLatestInterviews,
-} from "@/lib/actions/interview.actions";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import UserInterviews from "@/components/UserInterview";
+import TakeInterviews from "@/components/TakeInterview";
 
-const page = async () => {
-  const user = await getCurrentUser();
-
-  const [userInterviews, allInterview] = await Promise.all([
-    getInterviewsByUserId(user?.id!),
-    getLatestInterviews({ userId: user?.id! }),
-  ]);
-  const hasPastInterviews = userInterviews?.length! > 0;
-  const hasUpcomingInterviews = allInterview?.length! > 0;
-
+const Page = () => {
   return (
     <>
       <section className="card-cta">
@@ -42,51 +31,45 @@ const page = async () => {
         />
       </section>
 
-      <section className="flex flex-col gap-6 mt-8">
-        <h2>Your Interviews</h2>
+      {/* Suspense for UserInterviews */}
+      <Suspense
+        fallback={
+          <section className=" flex flex-col gap-6 mt-8">
+            <h2>Your Interviews</h2>
+            <div className="interviews-section ">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="card-border w-[360px] max-sm:w-full min-h-96"
+                />
+              ))}
+            </div>
+          </section>
+        }
+      >
+        <UserInterviews />
+      </Suspense>
 
-        <div className="interviews-section">
-          {hasPastInterviews ? (
-            userInterviews?.map((interview) => (
-              <InterviewCard
-                key={interview.id}
-                userId={user?.id}
-                interviewId={interview.id}
-                role={interview.role}
-                type={interview.type}
-                techstack={interview.techstack}
-                createdAt={interview.createdAt}
-              />
-            ))
-          ) : (
-            <p>You haven&apos;t taken any interviews yet</p>
-          )}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-6 mt-8">
-        <h2>Take Interviews</h2>
-
-        <div className="interviews-section">
-          {hasUpcomingInterviews ? (
-            allInterview?.map((interview) => (
-              <InterviewCard
-                key={interview.id}
-                userId={user?.id}
-                interviewId={interview.id}
-                role={interview.role}
-                type={interview.type}
-                techstack={interview.techstack}
-                createdAt={interview.createdAt}
-              />
-            ))
-          ) : (
-            <p>There are no interviews available</p>
-          )}
-        </div>
-      </section>
+      {/* Suspense for TakeInterviews */}
+      <Suspense
+        fallback={
+          <section className=" flex flex-col gap-6 mt-8">
+            <h2>Take Interviews</h2>
+            <div className="interviews-section ">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="card-border w-[360px] max-sm:w-full min-h-96"
+                />
+              ))}
+            </div>
+          </section>
+        }
+      >
+        <TakeInterviews />
+      </Suspense>
     </>
   );
 };
 
-export default page;
+export default Page;

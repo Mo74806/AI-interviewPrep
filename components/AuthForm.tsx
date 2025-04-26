@@ -46,6 +46,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     console.log(form);
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setLoadingBtn(true);
     try {
       if (type === "sign-up") {
         const { name, email, password } = data;
@@ -115,10 +116,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
         <Form {...form}>
           <form
-            onSubmit={() => {
-              setLoadingBtn(true);
-              form.handleSubmit(onSubmit);
-            }}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="w-full space-y-6 mt-4 form"
           >
             {!isSignIn && (
