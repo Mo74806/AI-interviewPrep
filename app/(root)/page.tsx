@@ -10,7 +10,7 @@ import TakeInterviews from "@/components/TakeInterview";
 const Page = () => {
   return (
     <>
-      <section className="card-cta">
+      <section className="card-cta overflow-hidden flex flex-col  lg:flex-row gap-6 mt-8">
         <div className="flex flex-col gap-6 max-w-lg">
           <h2>Get Interview-Ready with AI-Powered Practice & Feedback</h2>
           <p className="text-lg">
@@ -27,7 +27,7 @@ const Page = () => {
           alt="robo-dude"
           width={400}
           height={400}
-          className="max-sm:hidden"
+          className="max-sm:hidden "
         />
       </section>
 
