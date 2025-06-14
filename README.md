@@ -31,7 +31,6 @@ Built with the tools and technologies:
   - [Usage](#usage)
   - [Testing](#testing)
 
-</div>
 ---
 
 ## Overview
@@ -104,3 +103,5 @@ npm test
 ## 📌 Return
 
 [Back to top](#ai-interviewprep)
+
+</div>
