@@ -20,6 +20,7 @@ Built with the tools and technologies:
 
 
 ---
+<div align="start">
 
 ## Table of Contents
 
@@ -30,6 +31,7 @@ Built with the tools and technologies:
   - [Usage](#usage)
   - [Testing](#testing)
 
+</div>
 ---
 
 ## Overview
