@@ -7,7 +7,16 @@ Master Interviews Faster, Smarter, with Confidence
 
 Built with the tools and technologies:
 
-![React](https://img.shields.io/badge/react) ![NextJS](https://img.shields.io/badge/next.js) ![TypeScript](https://img.shields.io/badge/typescript) ![Firebase](https://img.shields.io/badge/firebase) ![TailwindCSS](https://img.shields.io/badge/tailwindcss) ![Prisma](https://img.shields.io/badge/prisma) ![Zod](https://img.shields.io/badge/zod) ![Cslint](https://img.shields.io/badge/cslint) ![React Hook Form](https://img.shields.io/badge/react_hook_form)
+![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)
+![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?logo=tailwindcss&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-EF4444?logo=zod&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)
+![React Hook Form](https://img.shields.io/badge/React_Hook_Form-EC5990?logo=reacthookform&logoColor=white)
+
 
 ---
 
